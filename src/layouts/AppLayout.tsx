@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom"
 import Logo from "@/components/Logo"
 import NavMenu from "@/components/NavMenu"
+import SideBarMenu from "@/components/SideBarMenu"
 
 const AppLayout = () => {
     return(
@@ -18,6 +19,7 @@ const AppLayout = () => {
                     <NavMenu/>
                 </div>
             </header>
+            <SideBarMenu/>
             <section
                 className="max-w-screen-2xl mx-auto mt-10 p-5"
             >
