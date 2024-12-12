@@ -1,10 +1,11 @@
 import { Project } from "@/classes/index"
+import ProjectForm from "@/components/projects/ProjectForm";
 import { SubmitHandler, useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
 
 const CreateProjectView = () => {
 
-  const {register, handleSubmit} = useForm<Project>({defaultValues:new Project()});
+  const {register, handleSubmit, formState: {errors}} = useForm<Project>({defaultValues:new Project()});
 
   const handleOnSubmitForm: SubmitHandler<Project> = (data: Project) => { 
     console.log("handleOnSubmitForm");
@@ -36,6 +37,10 @@ const CreateProjectView = () => {
               onSubmit={handleSubmit(handleOnSubmitForm)}
               noValidate
             >
+              <ProjectForm
+                register={register}
+                errors={errors}
+              />
               <input
                 className="bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors"
                 type="submit"
