@@ -1,15 +1,17 @@
-import { Project } from "@/classes/index"
+//import { Project } from "@/classes/index"
 import ProjectForm from "@/components/projects/ProjectForm";
 import { SubmitHandler, useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
+import { ProjectFormData } from "@/types/index";
+import projectAPI from "@/api/projectAPI"
 
 const CreateProjectView = () => {
 
-  const {register, handleSubmit, formState: {errors}} = useForm<Project>({defaultValues:new Project()});
+  const {register, handleSubmit, formState: {errors}} = useForm<ProjectFormData>({});
 
-  const handleOnSubmitForm: SubmitHandler<Project> = (data: Project) => { 
+  const handleOnSubmitForm: SubmitHandler<ProjectFormData> = (data: ProjectFormData) => { 
     console.log("handleOnSubmitForm");
-    console.log(data); 
+    projectAPI.create(data); 
   }
 
   return (

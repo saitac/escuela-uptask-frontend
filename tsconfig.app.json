@@ -11,8 +11,9 @@
       "@/components/*": ["components/*"],
       "@/views/*": ["views/*"],
       "@/layouts/*": ["layouts/*"],
-      "@/classes/*": ["classes/*"],
-      "@/interfaces/*": ["interfaces/*"],
+      "@/types/*": ["types/*"],
+      "@/api/*": ["api/*"],
+      "@/lib/*": ["lib/*"]
     },
 
     /* Bundler mode */
