@@ -1,26 +1,33 @@
 import api from "@/lib/axios";
-import { Resp, ProjectFormData, RespSchema } from "@/types/index";
+import { ZprojectFormData } from "@/types/index";
+import { Resp } from "@/classes/index";
 
 class projectAPI {
 
-    static async create(formData: ProjectFormData) {
-        let resp: Resp;
-        let data: Resp
+    static async create(formData: ZprojectFormData): Promise<Resp> {
+        const resp: Resp = new Resp();
         try {
+
+            resp.error = "";
+            resp.project = undefined;
+
             const {data} = await api.post<Resp>("/projects", formData);
             
-            console.log("1");
-            console.log(data)
-            console.log(RespSchema.safeParse(data));
-            console.log("2");
+            if( data.error && data.error.length > 0 ) {
+                resp.error = data.error;
+            }
+
+            if ( data.project ) {
+                resp.project = data.project;
+            }            
             
         } catch (error) {
-            /*if (  error instanceof Error ) {
-                
-            }*/
-           console.log(error)
+            if (  error instanceof Error ) {
+             resp.error = error.message;   
+            }
+
         }finally{
-            
+           return resp;
         }
     }
 

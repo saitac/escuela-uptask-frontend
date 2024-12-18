@@ -7,18 +7,11 @@ const ProjectSchema = z.object({
     description: z.string()
 });
 
-const RespSchema = z.object({
-    error: z.string(),
-    project: ProjectSchema
-});
 
-type Project = z.infer<typeof ProjectSchema>;
-type ProjectFormData = Pick<Project, "projectName" | "clientName" | "description">;
-type Resp = z.infer<typeof RespSchema>
+type Zproject = z.infer<typeof ProjectSchema>;
+type ZprojectFormData = Pick<Zproject, "projectName" | "clientName" | "description">;
 
 export {
-    type Project,
-    type ProjectFormData,
-    type Resp,
-    RespSchema
+    type Zproject,
+    type ZprojectFormData
 }

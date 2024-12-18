@@ -2,16 +2,18 @@
 import ProjectForm from "@/components/projects/ProjectForm";
 import { SubmitHandler, useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
-import { ProjectFormData } from "@/types/index";
+import { ZprojectFormData } from "@/types/index";
 import projectAPI from "@/api/projectAPI"
+import { Resp } from "@/classes/index";
 
 const CreateProjectView = () => {
 
-  const {register, handleSubmit, formState: {errors}} = useForm<ProjectFormData>({});
+  const {register, handleSubmit, formState: {errors}} = useForm<ZprojectFormData>({});
 
-  const handleOnSubmitForm: SubmitHandler<ProjectFormData> = (data: ProjectFormData) => { 
-    console.log("handleOnSubmitForm");
-    projectAPI.create(data); 
+  const handleOnSubmitForm: SubmitHandler<ZprojectFormData> = async (data: ZprojectFormData) => { 
+    
+    const resp: Resp =  await projectAPI.create(data); 
+    console.log(resp);
   }
 
   return (
