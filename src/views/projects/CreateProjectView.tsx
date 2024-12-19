@@ -1,19 +1,22 @@
 //import { Project } from "@/classes/index"
 import ProjectForm from "@/components/projects/ProjectForm";
 import { SubmitHandler, useForm } from "react-hook-form"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { ZprojectFormData } from "@/types/index";
 import projectAPI from "@/api/projectAPI"
-import { Resp } from "@/classes/index";
+import { useState } from "react";
 
 const CreateProjectView = () => {
 
+  const navigate = useNavigate();
+  const [guardando, setGuardando] = useState(false);
   const {register, handleSubmit, formState: {errors}} = useForm<ZprojectFormData>({});
 
-  const handleOnSubmitForm: SubmitHandler<ZprojectFormData> = async (data: ZprojectFormData) => { 
-    
-    const resp: Resp =  await projectAPI.create(data); 
-    console.log(resp);
+  const handleOnSubmitForm: SubmitHandler<ZprojectFormData> = async (data: ZprojectFormData): Promise<void> => { 
+    //const resp: Resp =  await projectAPI.create(data);
+    setGuardando(true);
+    await projectAPI.create(data);
+    navigate("/");      
   }
 
   return (
@@ -46,9 +49,10 @@ const CreateProjectView = () => {
                 errors={errors}
               />
               <input
-                className="bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors"
+                className="bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors disabled:bg-slate-400"
                 type="submit"
                 value="Crear Proyecto"
+                disabled={guardando}
               />
             </form>
           </div>
