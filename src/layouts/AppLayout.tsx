@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom"
+import { ToastContainer } from "react-toastify"
 import Logo from "@/components/Logo"
 import NavMenu from "@/components/NavMenu"
 import SideBarMenu from "@/components/SideBarMenu"
@@ -34,6 +35,10 @@ const AppLayout = () => {
                     Todos los derechos reservados {new Date().getFullYear()}
                 </p>
             </footer>
+            <ToastContainer
+                pauseOnHover={false}
+                pauseOnFocusLoss={false}
+            />
         </>
     )
 }

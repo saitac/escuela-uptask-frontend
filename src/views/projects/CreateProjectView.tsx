@@ -1,22 +1,39 @@
 //import { Project } from "@/classes/index"
 import ProjectForm from "@/components/projects/ProjectForm";
-import { SubmitHandler, useForm } from "react-hook-form"
-import { Link, useNavigate } from "react-router-dom"
+import { SubmitHandler, useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from '@tanstack/react-query'
 import { ZprojectFormData } from "@/types/index";
 import projectAPI from "@/api/projectAPI"
 import { useState } from "react";
+import { toast } from "react-toastify"
+import { Resp } from "@/classes/index";
 
 const CreateProjectView = () => {
 
   const navigate = useNavigate();
   const [guardando, setGuardando] = useState(false);
   const {register, handleSubmit, formState: {errors}} = useForm<ZprojectFormData>({});
+  
+  const {mutate} = useMutation({
+    mutationFn: projectAPI.create,
+    onError: () => {
+      console.log("Error");
+    },
+    onSuccess: (resp: Resp) => {
+      console.log(resp)
+      if ( !resp.error ) {
+        toast.success('Proyecto creado correctamente');
+      } else {
+        toast.error(resp.error);
+      }
+      navigate("/");
+    }
+  });
 
-  const handleOnSubmitForm: SubmitHandler<ZprojectFormData> = async (data: ZprojectFormData): Promise<void> => { 
-    //const resp: Resp =  await projectAPI.create(data);
+  const handleOnSubmitForm: SubmitHandler<ZprojectFormData> =  (data: ZprojectFormData): void => { 
     setGuardando(true);
-    await projectAPI.create(data);
-    navigate("/");      
+    mutate(data);
   }
 
   return (
