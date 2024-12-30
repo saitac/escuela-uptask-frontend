@@ -8,6 +8,7 @@ interface IProject {
 interface IResp {
     error: string;
     project?: IProject;
+    projects?: IProject[];
 }
 
 class Project implements IProject {
@@ -27,10 +28,12 @@ class Project implements IProject {
 class Resp implements IResp {
     error: string;
     project?: Project | undefined;
+    projects?: IProject[] | undefined;
 
-    constructor(error: string = "", project: IProject | undefined = undefined){
+    constructor(error: string = "", project: IProject | undefined = undefined, projects: IProject[] | undefined = undefined){
         this.error = error;
-        this.project = project
+        this.project = project;
+        this.projects = projects
     }
 }
 

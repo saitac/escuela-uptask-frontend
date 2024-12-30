@@ -5,23 +5,20 @@ import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from '@tanstack/react-query'
 import { ZprojectFormData } from "@/types/index";
 import projectAPI from "@/api/projectAPI"
-import { useState } from "react";
 import { toast } from "react-toastify"
 import { Resp } from "@/classes/index";
 
 const CreateProjectView = () => {
 
   const navigate = useNavigate();
-  const [guardando, setGuardando] = useState(false);
   const {register, handleSubmit, formState: {errors}} = useForm<ZprojectFormData>({});
   
-  const {mutate} = useMutation({
+  const {mutate, isPending} = useMutation({
     mutationFn: projectAPI.create,
     onError: () => {
-      console.log("Error");
+      toast.error('Error inesperado!');
     },
     onSuccess: (resp: Resp) => {
-      console.log(resp)
       if ( !resp.error ) {
         toast.success('Proyecto creado correctamente');
       } else {
@@ -29,10 +26,10 @@ const CreateProjectView = () => {
       }
       navigate("/");
     }
+    
   });
 
   const handleOnSubmitForm: SubmitHandler<ZprojectFormData> =  (data: ZprojectFormData): void => { 
-    setGuardando(true);
     mutate(data);
   }
 
@@ -69,7 +66,7 @@ const CreateProjectView = () => {
                 className="bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors disabled:bg-slate-400"
                 type="submit"
                 value="Crear Proyecto"
-                disabled={guardando}
+                disabled={isPending}
               />
             </form>
           </div>

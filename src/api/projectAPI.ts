@@ -1,7 +1,6 @@
 import api from "@/lib/axios";
-import { ZprojectFormData } from "@/types/index";
+import { ZprojectFormData, ProjectsSchema } from "@/types/index";
 import { Resp } from "@/classes/index";
-import { isAxiosError } from "axios";
 
 class projectAPI {
 
@@ -32,10 +31,33 @@ class projectAPI {
                 }
             }*/
             if (  error instanceof Error ) {
-             resp.error = error.message;   
+             resp.error = error.message;
             }
         }finally{
            return resp;
+        }
+    }
+
+    static async getAll(): Promise<Resp> {
+        const resp = new Resp();
+        try {
+            const {data} = await api.get<Resp>("/projects");
+            
+            if ( data.error && data.error.length > 0 ) {
+                resp.error = data.error;
+            }
+
+            if ( data.projects ) {
+
+                if ( ProjectsSchema.safeParse(data.projects).success ) {
+                    resp.projects = data.projects;
+                }
+                
+            }
+        } catch (error) {
+            if ( error instanceof Error) { resp.error = error.message; }
+        } finally {
+            return resp;
         }
     }
 
