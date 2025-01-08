@@ -6,7 +6,7 @@ import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 
 const DashboardView = () => {
 
-    const { data, isError, isLoading } = useQuery({
+    const { data } = useQuery({
       queryKey: ["projects"],
       queryFn: projectAPI.getAll
     });
@@ -87,6 +87,21 @@ const DashboardView = () => {
                                 to={""}
                                 className="block px-3 py-1 text-sm leading-6 text-gray-900"
                               >Ver Proyecto</Link>
+                            </MenuItem>
+                            <MenuItem>
+                              <Link
+                                to={`/projects/${pr._id}/edit`}
+                                className="block px-3 py-1 text-sm leading-6 text-gray-900"
+                              >Editar Proyecto</Link>
+                            </MenuItem>
+                            <MenuItem>
+                              <button
+                                type='button'
+                                className='block px-3 py-1 text-sm leading-6 text-red-500'
+                                onClick={() => { }}
+                              >
+                                Eliminar Proyecto
+                              </button>
                             </MenuItem>
                           </MenuItems>
                         </Menu>

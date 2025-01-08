@@ -22,5 +22,6 @@ type ZprojectFormData = Pick<Zproject, "projectName" | "clientName" | "descripti
 export {
     type Zproject,
     type ZprojectFormData,
-    ProjectsSchema
+    ProjectsSchema,
+    ProjectSchema
 }

@@ -1,6 +1,7 @@
 import api from "@/lib/axios";
-import { ZprojectFormData, ProjectsSchema } from "@/types/index";
+import { ZprojectFormData, ProjectsSchema, Zproject, ProjectSchema } from "@/types/index";
 import { Resp } from "@/classes/index";
+import { isAxiosError } from "axios";
 
 class projectAPI {
 
@@ -22,17 +23,12 @@ class projectAPI {
             }
                         
         } catch (error) {
-            /*if( isAxiosError(error) ){
-                if (error.message) {
-                    resp.error = error.message;
-                }
-                if (error.response){
-                    resp.error = error.response.data.message
-                }
-            }*/
-            if (  error instanceof Error ) {
-             resp.error = error.message;
+            if ( isAxiosError(error) && error.response ) { 
+                resp.error = error.response.data.error;
             }
+            /*if (  error instanceof Error ) {
+             resp.error = error.message;
+            }*/
         }finally{
            return resp;
         }
@@ -55,7 +51,35 @@ class projectAPI {
                 
             }
         } catch (error) {
-            if ( error instanceof Error) { resp.error = error.message; }
+            if ( isAxiosError(error) && error.response ) { 
+                resp.error = error.response.data.error;
+            }
+        } finally {
+            return resp;
+        }
+    }
+
+    static async getById(projectId: Zproject["_id"]): Promise<Resp> {
+        const resp = new Resp;
+        try {
+            const {data} = await api.get<Resp>(`/projects/${projectId}`);
+            
+            if ( data.error && data.error.length > 0 ) {
+                resp.error = data.error;
+            }
+
+            if ( data.project ) {
+
+                if ( ProjectSchema.safeParse(data.project).success ) {
+                    resp.project = data.project;
+                }
+                
+            }
+
+        } catch (error) {
+            if ( isAxiosError(error) && error.response ) { 
+                resp.error = error.response.data.error;
+            }
         } finally {
             return resp;
         }
