@@ -11,7 +11,6 @@ const SideBarMenu = () => {
             id="default-sidebar"
             className="fixed top-0 left-0"
         >
-            <p>HOLA SALVADOR</p>
 
         </aside>
     )

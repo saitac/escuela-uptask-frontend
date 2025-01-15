@@ -10,10 +10,7 @@ const DashboardView = () => {
       queryKey: ["projects"],
       queryFn: projectAPI.getAll
     });
-
-    
-    
-
+  
     if (data && data.projects) return(
         <>
           <h1
