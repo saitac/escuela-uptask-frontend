@@ -1,8 +1,11 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import ProjectForm from "./ProjectForm"
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { ZprojectFormData } from "@/types/index";
-import { Project } from "@/classes/index";
+import { Project, Resp } from "@/classes/index";
+import projectAPI from "@/api/projectAPI";
+import { toast } from "react-toastify";
 
 type EditProjectFormProps = {
   project: Project
@@ -10,10 +13,35 @@ type EditProjectFormProps = {
 
 const EditProjectForm = ({project}: EditProjectFormProps) => {
 
-    const {register, handleSubmit, formState: {errors}} = useForm<ZprojectFormData>({defaultValues: project});
+    const navigate = useNavigate();
+
+    const {register, handleSubmit, formState: {errors}} = useForm<ZprojectFormData>({defaultValues: project});{}
+
+    const queryClient = useQueryClient();
+
+    const { mutate, isPending } = useMutation({
+      mutationFn: projectAPI.update,
+      onError: ( error ) => { toast.error(error.message) },
+      onSuccess: (resp: Resp) => {
+        
+        queryClient.invalidateQueries({queryKey:["projects"]});
+        queryClient.invalidateQueries({queryKey:["editProject", project._id]});
+        
+        if ( !resp.error ) {
+          toast.success('Proyecto actualizado correctamente');
+        } else {
+          toast.error(resp.error);
+        }
+        navigate("/");
+      }
+    });
 
     const handleOnSubmitForm =  (formData: ZprojectFormData): void => { 
-        console.log(formData);
+        const data = {
+          formData,
+          projectId: project._id
+        };
+        mutate(data);
       }
 
     return (
@@ -49,7 +77,7 @@ const EditProjectForm = ({project}: EditProjectFormProps) => {
                 className="bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors disabled:bg-slate-400"
                 type="submit"
                 value="Guardar Cambios"
-                //disabled={isPending}
+                disabled={isPending}
               />
             </form>
           </div>

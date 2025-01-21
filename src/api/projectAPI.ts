@@ -3,6 +3,11 @@ import { ZprojectFormData, ProjectsSchema, Zproject, ProjectSchema } from "@/typ
 import { Resp } from "@/classes/index";
 import { isAxiosError } from "axios";
 
+type ProjectAPIType = {
+    formData: ZprojectFormData,
+    projectId: Zproject["_id"]
+};
+
 class projectAPI {
 
     static async create(formData: ZprojectFormData): Promise<Resp> {
@@ -63,6 +68,58 @@ class projectAPI {
         const resp = new Resp;
         try {
             const {data} = await api.get<Resp>(`/projects/${projectId}`);
+            
+            if ( data.error && data.error.length > 0 ) {
+                resp.error = data.error;
+            }
+
+            if ( data.project ) {
+
+                if ( ProjectSchema.safeParse(data.project).success ) {
+                    resp.project = data.project;
+                }
+                
+            }
+
+        } catch (error) {
+            if ( isAxiosError(error) && error.response ) { 
+                resp.error = error.response.data.error;
+            }
+        } finally {
+            return resp;
+        }
+    }
+
+    static async update({formData, projectId}: ProjectAPIType): Promise<Resp> {
+        const resp = new Resp;
+        try {
+            const {data} = await api.put<Resp>(`/projects/${projectId}`, formData);
+            
+            if ( data.error && data.error.length > 0 ) {
+                resp.error = data.error;
+            }
+
+            if ( data.project ) {
+
+                if ( ProjectSchema.safeParse(data.project).success ) {
+                    resp.project = data.project;
+                }
+                
+            }
+
+        } catch (error) {
+            if ( isAxiosError(error) && error.response ) { 
+                resp.error = error.response.data.error;
+            }
+        } finally {
+            return resp;
+        }
+    }
+
+    static async delete(projectId: Zproject["_id"]): Promise<Resp> {
+        const resp = new Resp;
+        try {
+            const {data} = await api.delete<Resp>(`/projects/${projectId}`);
             
             if ( data.error && data.error.length > 0 ) {
                 resp.error = data.error;
