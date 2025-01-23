@@ -64,7 +64,7 @@ const DashboardView = () => {
                           className="min-w-0 flex-auto space-y-2"
                         >
                           <Link
-                            to={""}
+                            to={`/projects/${pr._id}`}
                             className="text-gray-600 cursor-pointer hover:underline text-3xl font-bold"
                           >
                             {pr.projectName}
@@ -99,7 +99,7 @@ const DashboardView = () => {
                           >
                             <MenuItem>
                               <Link
-                                to={""}
+                                to={`/projects/${pr._id}`}
                                 className="block px-3 py-1 text-sm leading-6 text-gray-900"
                               >Ver Proyecto</Link>
                             </MenuItem>
