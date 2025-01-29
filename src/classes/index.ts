@@ -1,3 +1,12 @@
+
+enum taskStatus {
+    PENDING = "pending",
+    ON_HOLD = "onhold",
+    IN_PROGRESS = "inProgress",
+    UNDER_REVIEW = "underReview",
+    COMPLETED = "completed"
+}
+
 interface IProject {
      _id: string;
     projectName: string;
@@ -11,6 +20,15 @@ interface IResp {
     projects?: IProject[];
 }
 
+interface ITask {
+    _id: string,
+    name: string,
+    description: string,
+    projectId: string,
+    status: taskStatus
+}
+
+
 class Project implements IProject {
     _id: string;
     clientName: string;
@@ -23,6 +41,22 @@ class Project implements IProject {
         this.description = description;
         this.projectName = projectName;
     }
+}
+
+class Task implements ITask {
+    _id: string;
+    name: string;
+    description: string;
+    projectId: string;
+    status: taskStatus;
+
+    constructor(_id: string = "", name: string = "", description: string = "", projectId: string = "", status: taskStatus = taskStatus.ON_HOLD){
+        this._id = _id;
+        this.name = name;
+        this.description = description;
+        this.projectId = projectId;
+        this.status = status
+    }   
 }
 
 class Resp implements IResp {
@@ -39,5 +73,9 @@ class Resp implements IResp {
 
 export {
     Project,
+    type IProject,
+    Task,
+    type ITask,
+    taskStatus,
     Resp
 }

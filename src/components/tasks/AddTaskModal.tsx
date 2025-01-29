@@ -1,14 +1,37 @@
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from "@headlessui/react"
+import { useLocation, useNavigate } from "react-router-dom"
 import { Fragment } from "react/jsx-runtime"
+import { useForm } from "react-hook-form";
+import TaskForm from "./TaskForm";
+import { ZtaskFormData } from "@/types/index";
+import { Task } from "@/classes/index";
 
 const AddTaskModal = () => {
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const modalTask = queryParams.get("newTask");
+    const show: boolean = modalTask ? true : false;
+
+    const { register, handleSubmit, formState: {errors} } = useForm<ZtaskFormData>({defaultValues: new Task});
+
+    const handleOnSubmitForm =  (formData: ZtaskFormData): void => { 
+        /*const data = {
+          formData,
+          projectId: project._id
+        };
+        mutate(data);*/
+        console.log(formData);
+      }
+
     return(
         <>
-            <Transition appear show={true} as={Fragment}>
+            <Transition appear show={show} as={Fragment}>
                 <Dialog
                     as="div"
                     className="relative z-10"
-                    onClose={() => {}}
+                    onClose={() => navigate(location.pathname, {replace: true})}
                 >
                     <TransitionChild
                         as={Fragment}
@@ -22,7 +45,7 @@ const AddTaskModal = () => {
                         <div className="fixed inset-0 bg-black/60"></div>
                     </TransitionChild>
 
-                    <div className="flex inset-0 overflow-y-auto">
+                    <div className="fixed inset-0 overflow-y-auto">
                         <div className="flex min-h-full items-center justify-center p-4 text-center">
                             <TransitionChild
                                 as={Fragment}
@@ -46,6 +69,21 @@ const AddTaskModal = () => {
                                         className="text-xl font-bold"
                                     >Llena el formulario y crea {""}<span className="text-fuchsia-600">una tarea</span>
                                     </p>
+                                    <form
+                                        className="mt-10 space-y-3"
+                                        onSubmit={handleSubmit(handleOnSubmitForm)}
+                                        noValidate
+                                    >
+                                        <TaskForm
+                                            register={register}
+                                            errors={errors}
+                                        />
+                                        <input
+                                            className="bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors disabled:bg-slate-400"
+                                            type="submit"
+                                            value="Guardar Tarea"
+                                        />
+                                    </form>
                                 </DialogPanel>
                             </TransitionChild>
                         </div>

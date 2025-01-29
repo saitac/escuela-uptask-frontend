@@ -15,7 +15,8 @@ const EditProjectForm = ({project}: EditProjectFormProps) => {
 
     const navigate = useNavigate();
 
-    const {register, handleSubmit, formState: {errors}} = useForm<ZprojectFormData>({defaultValues: project});{}
+    const {register, handleSubmit, formState: {errors}} = useForm<ZprojectFormData>({defaultValues: project});
+    //{}
 
     const queryClient = useQueryClient();
 
