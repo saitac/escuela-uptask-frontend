@@ -18,6 +18,8 @@ interface IResp {
     error: string;
     project?: IProject;
     projects?: IProject[];
+    task?: ITask;
+    tasks?: ITask[];
 }
 
 interface ITask {
@@ -63,11 +65,17 @@ class Resp implements IResp {
     error: string;
     project?: Project | undefined;
     projects?: IProject[] | undefined;
+    task?: ITask | undefined;
+    tasks?: ITask[] | undefined;
 
-    constructor(error: string = "", project: IProject | undefined = undefined, projects: IProject[] | undefined = undefined){
+    constructor(error: string = "", project: IProject | undefined = undefined, projects: IProject[] | undefined = undefined,
+        task: ITask | undefined = undefined, tasks: ITask[] | undefined = undefined
+    ){
         this.error = error;
         this.project = project;
-        this.projects = projects
+        this.projects = projects;
+        this.task = task;
+        this.tasks = tasks
     }
 }
 

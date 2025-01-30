@@ -1,12 +1,19 @@
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from "@headlessui/react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Fragment } from "react/jsx-runtime"
+import { toast } from "react-toastify"
 import { useForm } from "react-hook-form";
 import TaskForm from "./TaskForm";
 import { ZtaskFormData } from "@/types/index";
-import { Task } from "@/classes/index";
+import { Project, Resp, Task } from "@/classes/index";
+import { useMutation } from "@tanstack/react-query";
+import taskAPI from "@/api/taskAPI";
 
-const AddTaskModal = () => {
+type AddTaskModalProps = {
+    project: Project
+}
+
+const AddTaskModal = ( {project}: AddTaskModalProps ) => {
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -14,15 +21,32 @@ const AddTaskModal = () => {
     const modalTask = queryParams.get("newTask");
     const show: boolean = modalTask ? true : false;
 
+    
     const { register, handleSubmit, formState: {errors} } = useForm<ZtaskFormData>({defaultValues: new Task});
 
+    const {mutate, isPending} = useMutation({
+        mutationFn: taskAPI.create,
+        onError: () => {
+            toast.error('Error inesperado!');
+        },
+        onSuccess: (resp: Resp) => {
+            console.log("OK!");
+        }
+    });
+
     const handleOnSubmitForm =  (formData: ZtaskFormData): void => { 
-        /*const data = {
+
+        const data = {
           formData,
           projectId: project._id
         };
-        mutate(data);*/
+
+        console.log("data")
+        console.log(data);
         console.log(formData);
+        console.log("data");
+        mutate(data);
+
       }
 
     return(

@@ -35,7 +35,7 @@ const ProjectDetailsView = () => {
                         >Agregar Tarea
                         </button>
                     </nav>
-                    <AddTaskModal/>
+                    <AddTaskModal project={data.project} />
                 </>
             )
         }
