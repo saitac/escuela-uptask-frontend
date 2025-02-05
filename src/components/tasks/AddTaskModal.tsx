@@ -1,11 +1,11 @@
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from "@headlessui/react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { Fragment } from "react/jsx-runtime"
 import { toast } from "react-toastify"
 import { useForm } from "react-hook-form";
 import TaskForm from "./TaskForm";
 import { ZtaskFormData } from "@/types/index";
-import { Project, Resp, Task } from "@/classes/index";
+import { Project, Resp } from "@/classes/index";
 import { useMutation } from "@tanstack/react-query";
 import taskAPI from "@/api/taskAPI";
 
@@ -16,13 +16,20 @@ type AddTaskModalProps = {
 const AddTaskModal = ( {project}: AddTaskModalProps ) => {
 
     const navigate = useNavigate();
+
+    /** Leer si el modal existe */
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const modalTask = queryParams.get("newTask");
     const show: boolean = modalTask ? true : false;
 
+    /** Obtener projectId */
+    const params = useParams();
+    const projectId: string = params.projectId!;
+
     
-    const { register, handleSubmit, formState: {errors} } = useForm<ZtaskFormData>({defaultValues: new Task});
+    const { register, handleSubmit, reset, formState: {errors} } = useForm<ZtaskFormData>({defaultValues: {name:"", description:""}});
+    //const { register, handleSubmit, formState: {errors} } = useForm<ZtaskFormData>({defaultValues: new Task});
 
     const {mutate, isPending} = useMutation({
         mutationFn: taskAPI.create,
@@ -30,24 +37,27 @@ const AddTaskModal = ( {project}: AddTaskModalProps ) => {
             toast.error('Error inesperado!');
         },
         onSuccess: (resp: Resp) => {
-            console.log("OK!");
+            
+            if ( !resp.error ) {
+                toast.success('Tarea creada correctamente');
+              } else {
+                toast.error(resp.error);
+            }
+
+            reset();
+            navigate(location.pathname, {replace: true});
+            //navigate(`/projects/${projectId}`);
         }
     });
 
     const handleOnSubmitForm =  (formData: ZtaskFormData): void => { 
-
         const data = {
           formData,
           projectId: project._id
         };
 
-        console.log("data")
-        console.log(data);
-        console.log(formData);
-        console.log("data");
         mutate(data);
-
-      }
+    }
 
     return(
         <>
@@ -95,7 +105,9 @@ const AddTaskModal = ( {project}: AddTaskModalProps ) => {
                                     </p>
                                     <form
                                         className="mt-10 space-y-3"
-                                        onSubmit={handleSubmit(handleOnSubmitForm)}
+                                        onSubmit={
+                                            handleSubmit(handleOnSubmitForm)
+                                        }
                                         noValidate
                                     >
                                         <TaskForm
@@ -106,6 +118,7 @@ const AddTaskModal = ( {project}: AddTaskModalProps ) => {
                                             className="bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors disabled:bg-slate-400"
                                             type="submit"
                                             value="Guardar Tarea"
+                                            disabled={isPending}
                                         />
                                     </form>
                                 </DialogPanel>

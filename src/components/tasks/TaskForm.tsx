@@ -8,6 +8,7 @@ type TaskFormProps = {
 }
 
 const TaskForm = ({errors, register} : TaskFormProps) => {
+    
     return(
         <>
             <div className="flex flex-col gap-5">

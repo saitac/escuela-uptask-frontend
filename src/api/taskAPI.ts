@@ -16,13 +16,16 @@ class taskAPI {
             resp.error = "";
             resp.task = undefined;
 
-            const {data} = await api.post<Resp>(`/projects/${projectId}/tasks`, {name:"UNO", description:"DOS"});
-            
-            console.log("create");
-            console.log(formData);
-            console.log(data);
-            console.log("create");
+            const {data} = await api.post<Resp>(`/projects/${projectId}/tasks`, formData);
 
+            if( data.error && data.error.length > 0 ) {
+                resp.error = data.error;
+            }
+
+            if ( data.task ) {
+                resp.task = data.task;
+            }
+            
         } catch (error) {
             if( isAxiosError(error) && error.response ) { resp.error = error.response.data.error }   
         } finally {
