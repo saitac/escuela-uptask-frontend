@@ -1,5 +1,4 @@
-import { z, ZodType } from "zod"
-import { IProject } from "../classes";
+import { z } from "zod"
 
 const taskStatusSchema = z.enum(["pending","onhold","inProgress","underReview","completed"]);
 
@@ -15,8 +14,10 @@ const ProjectSchema = z.object({
     _id: z.string(),
     projectName: z.string(),
     clientName: z.string(),
-    description: z.string()
-}) satisfies ZodType<IProject> ;
+    description: z.string(),
+    tasks: z.array(TaskSchema)
+});
+// satisfies ZodType<IProject> 
 
 const ProjectsSchema = z.array(
     ProjectSchema.pick({
@@ -25,7 +26,8 @@ const ProjectsSchema = z.array(
         clientName: true,
         description: true
     })
-) satisfies ZodType<IProject[]>;
+);
+// satisfies ZodType<IProject[]>
 
 type Zproject = z.infer<typeof ProjectSchema>;
 type Ztask = z.infer<typeof TaskSchema>;

@@ -7,11 +7,20 @@ enum taskStatus {
     COMPLETED = "completed"
 }
 
+interface ITask {
+    _id: string,
+    name: string,
+    description: string,
+    projectId: string,
+    status: taskStatus
+}
+
 interface IProject {
      _id: string;
     projectName: string;
     clientName: string;
     description: string;
+    tasks: ITask[];
 };
 
 interface IResp {
@@ -22,28 +31,6 @@ interface IResp {
     tasks?: ITask[];
 }
 
-interface ITask {
-    _id: string,
-    name: string,
-    description: string,
-    projectId: string,
-    status: taskStatus
-}
-
-
-class Project implements IProject {
-    _id: string;
-    clientName: string;
-    description: string;
-    projectName: string;
-
-    constructor(_id: string = "", clientName: string = "", description: string = "" , projectName: string = "") {
-        this._id = _id;
-        this.clientName = clientName;
-        this.description = description;
-        this.projectName = projectName;
-    }
-}
 
 class Task implements ITask {
     _id: string;
@@ -59,6 +46,22 @@ class Task implements ITask {
         this.projectId = projectId;
         this.status = status
     }   
+}
+
+class Project implements IProject {
+    _id: string;
+    clientName: string;
+    description: string;
+    projectName: string;
+    tasks: Task[];
+
+    constructor(_id: string = "", clientName: string = "", description: string = "" , projectName: string = "", tasks: Task[]) {
+        this._id = _id;
+        this.clientName = clientName;
+        this.description = description;
+        this.projectName = projectName;
+        this.tasks = tasks;
+    }
 }
 
 class Resp implements IResp {
